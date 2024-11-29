@@ -1,3 +1,18 @@
+def posicionesInt(posiciones):
+    posicion_int = []
+    for posicion in posiciones:
+        posicion_int.append(int(posicion))
+    return posicion_int
+
+    
+def calcularPuntos(posiciones_int):
+    puntos = 0
+    for i in posiciones_int:
+        if i in tabla_puntos:
+            puntos += tabla_puntos[i]
+    return puntos
+    
+
 def ListadoTotalPuntos(archivo):
     with open(archivo, 'r') as archivo:
         lineas = archivo.readlines()
@@ -6,19 +21,8 @@ def ListadoTotalPuntos(archivo):
         for linea in lineas[1:]:                  
             pilotos = linea[:10].strip()
             posiciones = linea.split()[-21:]
-            posiciones_int = []
-            
-            for posicion in posiciones:
-                posiciones_int.append(int(posicion))
-            
-            puntos_piloto=0
-
-            for i in posiciones_int:
-                if i in tabla_puntos:
-                    puntos_piloto += tabla_puntos[i]
-                else:
-                    puntos_piloto += 0
-
+            posiciones_int = posicionesInt(posiciones)
+            puntos_piloto = calcularPuntos(posiciones_int)
             resultados.append((pilotos, puntos_piloto))
 
         n = len(resultados)
@@ -41,15 +45,9 @@ def ListadoPuntosEquipos(archivo):
         for linea in lineas[1:]:
             equipo = linea[12:40].strip()
             posiciones = linea.split()[-21:]
-            posiciones_int = []
+            posiciones_int = posicionesInt(posiciones)
 
-            for i in posiciones:
-                posiciones_int.append(int(i))
-
-            puntos_pilotos = 0
-            for posicion in posiciones_int:
-                if posicion in tabla_puntos:
-                    puntos_pilotos += tabla_puntos[posicion]
+            puntos_pilotos = calcularPuntos(posiciones_int)
 
             if equipo not in equipos_puntajes:
                 equipos_puntajes[equipo] = puntos_pilotos
@@ -77,23 +75,14 @@ def PromedioPuntos(archivo):
         for linea in lineas[1:]:
             pilotos = linea[:10].strip()
             posiciones = linea.split()[-21:]
-            posiciones_int = []
-            
-            for posicion in posiciones:
-                posiciones_int.append(int(posicion))
-
-            puntos_piloto = 0
+            posiciones_int = posicionesInt(posiciones)
+            puntos_piloto = calcularPuntos(posiciones_int)
             carreras = 0
         
             for i in posiciones_int:
                 carreras += 1
-                if i in tabla_puntos:
-                    puntos_piloto += tabla_puntos[i]
-                else:
-                    puntos_piloto += 0
-            
-            promedio_carreras = puntos_piloto/carreras
-            print(f"{pilotos}: {promedio_carreras:.2f} ")
+            promedio = puntos_piloto/carreras
+            print(f"{pilotos}: {promedio:.2f} ")
 
 
 def MejorPosicion(archivo):
@@ -104,10 +93,7 @@ def MejorPosicion(archivo):
         for linea in lineas[1:]:                
             pilotos = linea[:10].strip()
             posiciones = linea.split()[-21:]
-            posiciones_int = []
-
-            for posicion in posiciones:
-                posiciones_int.append(int(posicion))
+            posiciones_int = posicionesInt(posiciones)
 
             min = None
             for i in posiciones_int:
